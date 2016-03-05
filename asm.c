@@ -66,8 +66,7 @@ static void assemble_program(char *program_name)
 
 	last_addr = 20;
 
-	//fp = fopen(program_name, "w");
-	fopen_s(fp, program_name, "w");
+	fp = fopen(program_name, "w");
 
 	if (fp == NULL) {
 		printf("couldn't open file %s\n", program_name);
