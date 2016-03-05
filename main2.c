@@ -68,6 +68,7 @@ void execute(Instruction inst) {
 	op1 = (inst.src0 == 1 ? inst.immediate : reg[inst.src0]);
 	op2 = (inst.src1 == 1 ? inst.immediate : reg[inst.src1]);
 
+
 	switch (inst.opcode) {
 
 	case ADD:
@@ -111,12 +112,12 @@ void execute(Instruction inst) {
 		break;
 
 	case LD:
-		reg[inst.dst] = mem[reg[op2] & 0xffff];
+		reg[inst.dst] = mem[op2 & 0xffff];
 		fprintf(output, ">>>> EXEC: R[%d] = MEM[%d] = %08x <<<<\n\n", inst.dst, op2, mem[op2]);
 		break;
 
 	case ST:
-		mem[reg[op2] & 0xffff] = reg[op1];
+		mem[reg[op2] & 0xffff] = op1;
 		fprintf(output, ">>>> EXEC: MEM[%d] = R[%d] = %08x <<<<\n\n", op2, inst.dst, op1);
 		break;
 
@@ -164,15 +165,15 @@ void execute(Instruction inst) {
 void writeTrace1(FILE *output, Instruction *inst) {
 
 
-	fprintf(output, "--- instruction %d (%04x) @ PC %d (%04x) -----------------------------------------------------------\n \
-	pc = %04x, inst = %08x, opcode = %d (%s), dst = %d, src0 = %d, src1 = %d, immediate = %08x\n \
-	r[0] = %08x r[1] = %08x r[2] = %08x r[3] = %08x\n \
-	r[4] = %08x r[5] = %08x r[6] = %08x r[7] = %08x\n\n",
+	fprintf(output, "--- instruction %d (%04x) @ PC %d (%04x) -----------------------------------------------------------\n"
+	"pc = %04x, inst = %08x, opcode = %d (%s), dst = %d, src0 = %d, src1 = %d, immediate = %08x\n"
+	"r[0] = %08x r[1] = %08x r[2] = %08x r[3] = %08x\n"
+	"r[4] = %08x r[5] = %08x r[6] = %08x r[7] = %08x\n\n",
 		counter, counter,
 		PC, PC, PC,
 		mem[PC],
 		inst->opcode, inst->name, inst->dst, inst->src0, inst->src1, inst->immediate,
-		reg[0], reg[1], reg[2], reg[3], reg[4], reg[5], reg[6], reg[7]);
+		reg[0], inst->immediate, reg[2], reg[3], reg[4], reg[5], reg[6], reg[7]);
 
 
 }
@@ -241,6 +242,10 @@ void setInstName(Instruction *inst){
 			inst->name = "JIN";
 			break;
 
+		case HLT:
+			inst->name = "HLT";
+			break;
+
 		}
 }
 
@@ -251,12 +256,18 @@ void run() {
 
 	while (1) {
 		inst = parseInst();
+
+		writeTrace1(output, &inst);	// before
+
+
 		if (inst.opcode == HLT) {
+			fprintf(output, ">>>> EXEC: HALT at PC %04x<<<<\n", PC);
+			fprintf(output, "sim finished at pc %d, %d instructions", PC, counter + 1);
 			break;
 		}
 
 
-		writeTrace1(output, &inst);	// before
+
 
 		if (PC == 0xffff) {
 			PC = 0;
