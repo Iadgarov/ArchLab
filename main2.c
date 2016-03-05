@@ -72,37 +72,37 @@ void execute(Instruction inst) {
 
 	case ADD:
 		reg[inst.dst] = op1 + op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d ADD %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d ADD %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case SUB:
 		reg[inst.dst] = op1 - op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d SUB %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d SUB %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case LSF:
 		reg[inst.dst] = op1 << op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d LSF %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d LSF %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case RSF:
 		reg[inst.dst] = op1 >> op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d RSF %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d RSF %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case AND:
 		reg[inst.dst] = op1 & op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d AND %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d AND %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case OR:
 		reg[inst.dst] = op1 | op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d OR %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d OR %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case XOR:
 		reg[inst.dst] = op1 ^ op2;
-		fprintf(output, ">>>> EXEC: R[%d] = %d XOR %d <<<<\n\n", inst.dst, reg[op1], reg[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = %d XOR %d <<<<\n\n", inst.dst, op1, op2);
 		break;
 
 	case LHI:
@@ -112,12 +112,12 @@ void execute(Instruction inst) {
 
 	case LD:
 		reg[inst.dst] = mem[reg[op2] & 0xffff];
-		fprintf(output, ">>>> EXEC: R[%d] = MEM[%d] = %08x <<<<\n\n", inst.dst, reg[op2], mem[reg[op2]]);
+		fprintf(output, ">>>> EXEC: R[%d] = MEM[%d] = %08x <<<<\n\n", inst.dst, op2, mem[op2]);
 		break;
 
 	case ST:
 		mem[reg[op2] & 0xffff] = reg[op1];
-		fprintf(output, ">>>> EXEC: MEM[%d] = R[%d] = %08x <<<<\n\n", op2, inst.dst, reg[op1]);
+		fprintf(output, ">>>> EXEC: MEM[%d] = R[%d] = %08x <<<<\n\n", op2, inst.dst, op1);
 		break;
 
 	case JLT:
@@ -125,7 +125,7 @@ void execute(Instruction inst) {
 			reg[7] = (PC == 0 ? 0xffff : PC - 1);
 			PC = inst.immediate;
 		}
-		fprintf(output , ">>>> EXEC: JLT %d, %d, %d <<<<\n\n", reg[op1], reg[op2], PC);
+		fprintf(output , ">>>> EXEC: JLT %d, %d, %d <<<<\n\n", op1, op2, PC);
 		break;
 
 	case JLE:
@@ -133,7 +133,7 @@ void execute(Instruction inst) {
 			reg[7] = (PC == 0 ? 0xffff : PC - 1);
 			PC = inst.immediate;
 		}
-		fprintf(output, ">>>> EXEC: JLE %d, %d, %d <<<<\n\n", reg[op1], reg[op2], PC);
+		fprintf(output, ">>>> EXEC: JLE %d, %d, %d <<<<\n\n", op1, op2, PC);
 		break;
 
 	case JEQ:
@@ -141,7 +141,7 @@ void execute(Instruction inst) {
 			reg[7] = (PC == 0 ? 0xffff : PC - 1);
 			PC = inst.immediate;
 		}
-		fprintf(output, ">>>> EXEC: JEQ %d, %d, %d <<<<\n\n", reg[op1], reg[op2], PC);
+		fprintf(output, ">>>> EXEC: JEQ %d, %d, %d <<<<\n\n", op1, op2, PC);
 		break;
 
 	case JNE:
@@ -149,7 +149,7 @@ void execute(Instruction inst) {
 			reg[7] = (PC == 0 ? 0xffff : PC - 1);
 			PC = inst.immediate;
 		}
-		fprintf(output, ">>>> EXEC: JNE %d, %d, %d <<<<\n\n", reg[op1], reg[op2], PC);
+		fprintf(output, ">>>> EXEC: JNE %d, %d, %d <<<<\n\n", op1, op2, PC);
 		break;
 
 	case JIN:
