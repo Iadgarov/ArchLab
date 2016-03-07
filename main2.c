@@ -113,12 +113,12 @@ void execute(Instruction inst) {
 
 	case LD:
 		reg[inst.dst] = mem[op2 & 0xffff];
-		fprintf(output, ">>>> EXEC: R[%d] = MEM[%d] = %08x <<<<\n\n", inst.dst, op2, mem[op2]);
+		fprintf(output, ">>>> EXEC: R[%d] = MEM[%d] = %08x <<<<\n\n", inst.dst, op2 & 0xffff, mem[op2 & 0xffff]);
 		break;
 
 	case ST:
-		mem[reg[op2] & 0xffff] = op1;
-		fprintf(output, ">>>> EXEC: MEM[%d] = R[%d] = %08x <<<<\n\n", op2, inst.dst, op1);
+		mem[op2 & 0xffff] = op1;
+		fprintf(output, ">>>> EXEC: MEM[%d] = R[%d] = %08x <<<<\n\n", op2 & 0xffff, inst.src0, op1);
 		break;
 
 	case JLT:
@@ -320,7 +320,6 @@ int main(int argc, char *argv[]){
 	fclose(output);
 	return 0;
 }
-
 
 
 
