@@ -1,0 +1,48 @@
+0. ADD R2 R0 R0 # r2 = 0
+1. ADD R5 R0 R1 2000 # r5 = 2000
+
+# initialize pointers to memory locations and save them in memory (weird, huh?)
+# ptr to table[r2][r3] in address 2100
+# ptr to table[r3][r2] in address 2101
+
+# nested main loops
+# only calculate half of the table because it's symmtrical
+2. ADD R5 R5 R2  # r5 = r5 + r2 (start of outer loop)
+3. ADD R2 R2 R1 1 # r2++ 
+4. ADD R6 R5 R0 # r6 = r5 (first pointing to same location on the diagonal)
+5. ADD R3 R0 R2 # r3 = r2 (start of inner loop)
+6. JIN R1 13 # jump to mult method
+7. ADD R3 R3 R1 1 # r3++
+8. ADD R7 R0 R1 10 # constant 10 in R7
+9. JLE R3 R7 6 # if r3 <= 10 go to inner loop
+10. ADD R7 R0 R1 10 # constant 10 in R7
+11. JEQ R2 R6 32 # if r2 = 10, we're done - exit both loops
+12. JIN R1 2 # otherwise jump to outer loop
+
+# multiply method (like Q3, slightly tweaked)
+		# 13. ADD R7 R7 R1 1 # r7++ (return address is src address + 1)
+		# 14. ST R7 R1 2102 # store r7 into mem[2102]
+13. ST R5 R1 2100 # store pointer r5
+14. ST R6 R1 2101 # store pointer r6
+15. ADD R6 R2 R0 # copy r2 into r6
+16. ADD R4 R0 R0 # r4 = 0
+17. ADD R5 R3 R0 # start with r5 = r3 x 2^0
+18. JEQ R6 R0 25 # exit loop when r6 = 0
+19. AND R7 R6 R1 1 # r7 = LSB(r6)
+20. JEQ R7 R0 22 # skip addition if r7 = 0
+21. ADD R4 R4 R5 # r4 += r5
+22. LSF R5 R5 R1 1 # r5 = r5 x 2
+23. RSF R6 R6 R1 1 # r6 = r6 / 2
+24. JIN R1 18 # jump back to start of mult loop
+
+# calculations done, write result to memory and return to main loop
+25. LD R5 R1 2100 # load pointer to table[r2][r3]
+26. LD R6 R1 2101 # load pointer to table[r3][r2]
+27. ST R4 R5 # store result into mem[r5]
+28. ST R4 R6 # store result into mem[r6]
+29. ADD R5 R5 R1 1 # r5++ (update pointer)
+30. ADD R6 R6 R1 10 # r6 += 10 (update pointer)
+		# 33. LD R7 R1 2102 # load return address into r7
+31. JIN R1 7 # back to main where we left off
+
+32. HLT
